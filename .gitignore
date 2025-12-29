@@ -8,3 +8,4 @@ data/*.db
 *.tsbuildinfo
 coverage/
 .claude/
+structure.json

@@ -642,6 +642,11 @@ Agrega al archivo de configuración MCP:
 - `list_api_keys` - Listar API keys
 - `revoke_api_key` - Revocar API key
 
+#### Structure Migration
+- `export_structure` - Exportar estructura (content types y taxonomías) a JSON
+- `import_structure` - Importar estructura desde JSON
+- `get_structure_summary` - Ver resumen de la estructura actual
+
 ## LokiJS Modernizado
 
 El proyecto incluye una versión modernizada de LokiJS con:
@@ -748,6 +753,74 @@ await db.save();
 - `$or` - OR lógico
 - `$not` - Negación
 
+## Migración de Estructura
+
+LokiCMS permite exportar e importar la estructura del CMS (content types y taxonomías) sin migrar el contenido. Útil para replicar la configuración entre entornos.
+
+### Exportar Estructura
+
+```bash
+# Exportar a structure.json (por defecto)
+npm run export:structure
+
+# Exportar a archivo específico
+npm run export:structure ./backup/mi-estructura.json
+```
+
+### Importar Estructura
+
+```bash
+# Importar desde structure.json
+npm run import:structure
+
+# Importar desde archivo específico
+npm run import:structure ./backup/mi-estructura.json
+
+# Opciones:
+#   --skip-existing, -s    Saltar items que ya existen
+#   --update-existing, -u  Actualizar items existentes
+#   --dry-run, -d          Simular sin hacer cambios
+
+npm run import:structure ./structure.json --skip-existing
+npm run import:structure ./structure.json --update-existing
+npm run import:structure ./structure.json --dry-run
+```
+
+### Formato del Archivo
+
+```json
+{
+  "version": "1.0.0",
+  "exportedAt": "2024-01-15T10:30:00.000Z",
+  "contentTypes": [
+    {
+      "name": "Product",
+      "slug": "product",
+      "description": "E-commerce products",
+      "fields": [
+        { "name": "title", "label": "Title", "type": "text", "required": true },
+        { "name": "price", "label": "Price", "type": "number" }
+      ]
+    }
+  ],
+  "taxonomies": [
+    {
+      "name": "Category",
+      "slug": "category",
+      "hierarchical": true
+    }
+  ]
+}
+```
+
+### Via MCP
+
+Los agentes AI pueden usar estas herramientas:
+
+- `export_structure` - Exportar estructura como JSON
+- `import_structure` - Importar estructura desde JSON
+- `get_structure_summary` - Ver resumen de la estructura actual
+
 ## Scripts
 
 | Script | Descripción |
@@ -758,6 +831,8 @@ await db.save();
 | `npm run start` | Iniciar API (producción) |
 | `npm run start:mcp` | Iniciar MCP (producción) |
 | `npm run seed` | Crear datos iniciales |
+| `npm run export:structure` | Exportar estructura a JSON |
+| `npm run import:structure` | Importar estructura desde JSON |
 | `npm run test` | Ejecutar tests |
 | `npm run typecheck` | Verificar tipos |
 
@@ -796,7 +871,8 @@ loki-cms/
 │   │   ├── tools/
 │   │   │   ├── content.ts
 │   │   │   ├── taxonomy.ts
-│   │   │   └── users.ts
+│   │   │   ├── users.ts
+│   │   │   └── structure.ts   # Migración de estructura
 │   │   └── index.ts           # Servidor MCP
 │   ├── models/
 │   │   ├── content-type.ts
@@ -815,6 +891,9 @@ loki-cms/
 │   │   ├── route-registry.ts  # Registro de rutas
 │   │   ├── collection-manager.ts  # Gestor de colecciones
 │   │   └── index.ts           # Exports
+│   ├── scripts/               # CLI scripts
+│   │   ├── export-structure.ts  # Exportar estructura
+│   │   └── import-structure.ts  # Importar estructura
 │   ├── services/
 │   │   ├── content-type.service.ts
 │   │   ├── entry.service.ts

@@ -13,6 +13,8 @@
     "start:api": "node dist/api/index.js",
     "start:mcp": "node dist/mcp/index.js",
     "seed": "tsx src/seed.ts",
+    "export:structure": "tsx src/scripts/export-structure.ts",
+    "import:structure": "tsx src/scripts/import-structure.ts",
     "test": "vitest",
     "test:run": "vitest run",
     "test:watch": "vitest --watch",

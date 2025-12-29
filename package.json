@@ -1,0 +1,54 @@
+{
+  "name": "loki-cms",
+  "version": "1.0.0",
+  "description": "Headless CMS with modernized LokiJS, REST API and MCP server",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/api/index.ts",
+    "dev:api": "tsx watch src/api/index.ts",
+    "dev:mcp": "tsx watch src/mcp/index.ts",
+    "build": "tsc",
+    "start": "node dist/api/index.js",
+    "start:api": "node dist/api/index.js",
+    "start:mcp": "node dist/mcp/index.js",
+    "seed": "tsx src/seed.ts",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest run --coverage",
+    "test:unit": "vitest run src/__tests__/unit",
+    "test:integration": "vitest run src/__tests__/integration",
+    "test:e2e": "vitest run src/__tests__/e2e",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.13.7",
+    "@hono/zod-validator": "^0.4.2",
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "hono": "^4.6.14",
+    "jose": "^5.9.6",
+    "nanoid": "^5.0.9",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "eslint": "^9.17.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "cms",
+    "headless",
+    "lokijs",
+    "mcp",
+    "api"
+  ],
+  "author": "",
+  "license": "MIT"
+}

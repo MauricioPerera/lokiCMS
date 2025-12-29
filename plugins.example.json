@@ -1,0 +1,25 @@
+{
+  "$schema": "./plugins.schema.json",
+  "plugins": [
+    {
+      "name": "lokicms-plugin-stripe",
+      "enabled": true,
+      "source": "npm",
+      "settings": {
+        "secretKey": "${STRIPE_SECRET_KEY}",
+        "webhookSecret": "${STRIPE_WEBHOOK_SECRET}",
+        "currency": "usd"
+      }
+    },
+    {
+      "name": "my-custom-plugin",
+      "enabled": true,
+      "source": "local",
+      "path": "./plugins/my-custom-plugin",
+      "settings": {
+        "apiKey": "${MY_PLUGIN_API_KEY}",
+        "debug": false
+      }
+    }
+  ]
+}

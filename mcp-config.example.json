@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "lokicms": {
+      "command": "node",
+      "args": ["dist/mcp/index.js"],
+      "cwd": "d:/repos/loki-cms",
+      "env": {
+        "DB_PATH": "./data/cms.db"
+      }
+    }
+  }
+}

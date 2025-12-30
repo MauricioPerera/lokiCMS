@@ -10,13 +10,16 @@ export const FieldTypeSchema = z.enum([
   'text',
   'textarea',
   'richtext',
+  'markdown',
   'number',
   'boolean',
   'date',
   'datetime',
+  'time',
   'email',
   'url',
   'slug',
+  'color',
   'select',
   'multiselect',
   'relation',
@@ -189,6 +192,7 @@ export function validateContentAgainstType(
       case 'text':
       case 'textarea':
       case 'richtext':
+      case 'markdown':
       case 'slug':
         if (typeof value !== 'string') {
           errors.push(`Field '${field.name}' must be a string`);
@@ -228,6 +232,22 @@ export function validateContentAgainstType(
       case 'datetime':
         if (typeof value !== 'string' && typeof value !== 'number') {
           errors.push(`Field '${field.name}' must be a date string or timestamp`);
+        }
+        break;
+
+      case 'time':
+        if (typeof value !== 'string') {
+          errors.push(`Field '${field.name}' must be a time string`);
+        } else if (!/^([01]\d|2[0-3]):([0-5]\d)(:([0-5]\d))?$/.test(value)) {
+          errors.push(`Field '${field.name}' must be a valid time format (HH:MM or HH:MM:SS)`);
+        }
+        break;
+
+      case 'color':
+        if (typeof value !== 'string') {
+          errors.push(`Field '${field.name}' must be a color string`);
+        } else if (!/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3}|[A-Fa-f0-9]{8})$/.test(value)) {
+          errors.push(`Field '${field.name}' must be a valid hex color (#RGB, #RRGGBB, or #RRGGBBAA)`);
         }
         break;
 

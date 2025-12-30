@@ -1,6 +1,8 @@
 # LokiCMS
 
-Headless CMS con base de datos LokiJS modernizada, API REST y servidor MCP para gestión mediante agentes AI.
+**A hackeable, AI-first headless CMS**
+
+CMS headless hackeable diseñado para AI. Base de datos LokiJS embebida, API REST y servidor MCP nativo para gestión mediante agentes AI.
 
 ## Características
 

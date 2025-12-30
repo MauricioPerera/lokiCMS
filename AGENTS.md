@@ -2,7 +2,7 @@
 
 ## Overview
 
-LokiCMS is a **headless CMS** built for AI agent integration via Model Context Protocol (MCP).
+**LokiCMS** is a **hackeable, AI-first headless CMS** built for AI agent integration via Model Context Protocol (MCP).
 
 | Aspect | Details |
 |--------|---------|

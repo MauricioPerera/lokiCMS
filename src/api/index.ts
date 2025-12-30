@@ -30,9 +30,14 @@ import { userRoutes } from './routes/users.js';
 import { searchRoutes } from './routes/search.js';
 import { schedulerRoutes } from './routes/scheduler.js';
 import { auditRoutes } from './routes/audit.js';
+import { revisionRoutes } from './routes/revisions.js';
+import { webhookRoutes } from './routes/webhooks.js';
+import { backupRoutes } from './routes/backup.js';
 import { routeRegistry, pluginRegistry, loadAllPlugins } from '../plugins/index.js';
 import { schedulerService } from '../services/scheduler.service.js';
 import { auditService } from '../services/audit.service.js';
+import { revisionService } from '../services/revision.service.js';
+import { webhookService } from '../services/webhook.service.js';
 
 // Environment detection
 const IS_PRODUCTION = process.env['NODE_ENV'] === 'production';
@@ -123,6 +128,9 @@ app.route('/api/users', userRoutes);
 app.route('/api/search', searchRoutes);
 app.route('/api/scheduler', schedulerRoutes);
 app.route('/api/audit', auditRoutes);
+app.route('/api/revisions', revisionRoutes);
+app.route('/api/webhooks', webhookRoutes);
+app.route('/api/backup', backupRoutes);
 
 // Plugin routes - registered dynamically
 function registerPluginRoutes() {
@@ -182,6 +190,12 @@ async function startServer() {
 
     // Initialize audit log
     await auditService.initialize();
+
+    // Initialize revision tracking
+    await revisionService.initialize();
+
+    // Initialize webhooks
+    await webhookService.initialize();
 
     // Load plugins
     console.log('Loading plugins...');

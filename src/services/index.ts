@@ -10,3 +10,6 @@ export { UserService, userService } from './user.service.js';
 export { SearchService, searchService } from './search.service.js';
 export { SchedulerService, schedulerService } from './scheduler.service.js';
 export { AuditService, auditService } from './audit.service.js';
+export { RevisionService, revisionService } from './revision.service.js';
+export { WebhookService, webhookService } from './webhook.service.js';
+export { BackupService, backupService } from './backup.service.js';

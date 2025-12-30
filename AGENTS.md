@@ -210,11 +210,12 @@ Instance of content based on a ContentType.
 interface Entry {
   id: string;
   contentTypeId: string;  // References ContentType
-  status: 'draft' | 'published' | 'archived';
+  status: 'draft' | 'published' | 'archived' | 'scheduled';
   data: Record<string, unknown>;  // Field values
   taxonomies?: Record<string, string[]>;  // taxonomy slug → term IDs
   author?: string;
   publishedAt?: number;
+  scheduledAt?: number;   // For scheduled publishing
   createdAt: number;
   updatedAt: number;
 }
@@ -318,6 +319,39 @@ userService.generateApiKey(userId)   // Create API key
 userService.verifyApiKey(key)        // Validate API key
 ```
 
+### searchService
+```typescript
+import { searchService } from './services/search.service.js';
+
+searchService.search({ query, types, contentTypes, status, limit })
+searchService.searchInContentType(slug, query, options)
+searchService.suggest(query, limit)  // Autocomplete suggestions
+```
+
+### schedulerService
+```typescript
+import { schedulerService } from './services/scheduler.service.js';
+
+schedulerService.start()             // Start background worker
+schedulerService.stop()              // Stop scheduler
+schedulerService.getStats()          // Get status and stats
+schedulerService.getUpcoming(limit)  // Get scheduled entries
+schedulerService.scheduleEntry(id, timestamp)  // Schedule for publishing
+schedulerService.cancelSchedule(id)  // Cancel scheduled publish
+```
+
+### auditService
+```typescript
+import { auditService } from './services/audit.service.js';
+
+auditService.log({ action, resource, resourceId, ... })
+auditService.query(filters, pagination)
+auditService.getResourceHistory(resource, id)
+auditService.getUserActivity(userId)
+auditService.getRecentActivity(limit)
+auditService.getStats()
+```
+
 ---
 
 ## API Routes
@@ -355,6 +389,11 @@ GET    /api/{resource}/slug/:slug   # Get by slug (where applicable)
 | `/api/auth/login` | POST - authenticate, get JWT |
 | `/api/auth/register` | POST - create user |
 | `/api/plugins` | GET - list loaded plugins |
+| `/api/search?q=query` | Full-text search across content |
+| `/api/search/suggest?q=partial` | Search suggestions |
+| `/api/search/:contentType?q=query` | Search within content type |
+| `/api/scheduler` | Scheduler status and management |
+| `/api/audit` | Audit log queries |
 | `/health` | GET - health check + memory stats |
 
 ### Authentication
@@ -371,7 +410,7 @@ X-API-Key: <key>
 
 ## MCP Tools
 
-29 tools available for AI agents via MCP protocol.
+40 tools available for AI agents via MCP protocol.
 
 ### Content Management (10 tools)
 | Tool | Description |
@@ -417,6 +456,29 @@ X-API-Key: <key>
 | `export_structure` | Export content types and taxonomies |
 | `import_structure` | Import structure with options |
 | `get_structure_summary` | Get summary of current structure |
+
+### Search Tools (3 tools)
+| Tool | Description |
+|------|-------------|
+| `search` | Full-text search across entries, content-types, users |
+| `search_in_content_type` | Search within a specific content type |
+| `search_suggest` | Get search suggestions from partial query |
+
+### Scheduler Tools (4 tools)
+| Tool | Description |
+|------|-------------|
+| `scheduler_status` | Get scheduler status and stats |
+| `scheduler_upcoming` | List entries scheduled for publishing |
+| `schedule_entry` | Schedule an entry for future publishing |
+| `cancel_schedule` | Cancel scheduled publishing |
+
+### Audit Tools (4 tools)
+| Tool | Description |
+|------|-------------|
+| `audit_recent` | Get recent audit log entries |
+| `audit_query` | Query audit logs with filters |
+| `audit_resource_history` | Get change history for a resource |
+| `audit_stats` | Get audit log statistics |
 
 ---
 

@@ -19,7 +19,7 @@ CMS headless hackeable diseñado para AI. Base de datos LokiJS embebida, API RES
 ## Instalación
 
 ```bash
-git clone <repository>
+git clone https://github.com/MauricioPerera/lokiCMS.git
 cd loki-cms
 npm install
 ```

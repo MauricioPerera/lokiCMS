@@ -124,6 +124,11 @@ interface ContentType {
   slug: string;           // URL-safe identifier (unique)
   description?: string;
   fields: Field[];        // Field definitions
+  titleField: string;     // Field used as title (default: 'title')
+  enableVersioning: boolean;  // Track versions
+  enableDrafts: boolean;      // Allow draft status
+  enableScheduling: boolean;  // Allow scheduled publishing
+  icon?: string;          // Icon identifier
   createdAt: number;
   updatedAt: number;
 }
@@ -131,12 +136,50 @@ interface ContentType {
 interface Field {
   name: string;           // Field identifier
   label: string;          // Display label
-  type: FieldType;        // text, textarea, richtext, number, boolean, date, media, select, slug, relation
+  type: FieldType;        // See supported types below
   required?: boolean;
   unique?: boolean;
   defaultValue?: unknown;
-  validation?: object;    // Type-specific validation
+  description?: string;
+  validation?: {
+    min?: number;         // Min length/value
+    max?: number;         // Max length/value
+    pattern?: string;     // Regex pattern
+    options?: string[];   // For select/multiselect
+  };
+  relationTo?: string;    // For relation fields
+  relationMultiple?: boolean;  // Multiple relations
 }
+```
+
+**Supported Field Types (17):**
+| Type | Description |
+|------|-------------|
+| `text` | Single line text |
+| `textarea` | Multi-line text |
+| `richtext` | HTML rich text |
+| `markdown` | Markdown text |
+| `number` | Numeric value |
+| `boolean` | True/false |
+| `date` | Date only |
+| `datetime` | Date and time |
+| `time` | Time only (HH:MM:SS) |
+| `email` | Email address |
+| `url` | URL |
+| `slug` | URL-safe slug |
+| `color` | Hex color (#RGB, #RRGGBB, #RRGGBBAA) |
+| `select` | Single selection |
+| `multiselect` | Multiple selections |
+| `relation` | Reference to other entries |
+| `media` | Media file reference |
+| `json` | JSON object |
+
+**Content Validation:**
+```typescript
+import { validateContentAgainstType } from './models/content-type.js';
+
+const result = validateContentAgainstType(entryData, contentType);
+// result: { valid: boolean, errors: string[] }
 ```
 
 ### Entry

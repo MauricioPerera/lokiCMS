@@ -33,11 +33,18 @@ import { auditRoutes } from './routes/audit.js';
 import { revisionRoutes } from './routes/revisions.js';
 import { webhookRoutes } from './routes/webhooks.js';
 import { backupRoutes } from './routes/backup.js';
+import { mediaRoutes } from './routes/media.js';
+import { i18nRoutes } from './routes/i18n.js';
+import { relationshipRoutes } from './routes/relationships.js';
+import { graphqlRoutes } from './routes/graphql.js';
 import { routeRegistry, pluginRegistry, loadAllPlugins } from '../plugins/index.js';
 import { schedulerService } from '../services/scheduler.service.js';
 import { auditService } from '../services/audit.service.js';
 import { revisionService } from '../services/revision.service.js';
 import { webhookService } from '../services/webhook.service.js';
+import { mediaService } from '../services/media.service.js';
+import { i18nService } from '../services/i18n.service.js';
+import { relationshipService } from '../services/relationship.service.js';
 
 // Environment detection
 const IS_PRODUCTION = process.env['NODE_ENV'] === 'production';
@@ -131,6 +138,10 @@ app.route('/api/audit', auditRoutes);
 app.route('/api/revisions', revisionRoutes);
 app.route('/api/webhooks', webhookRoutes);
 app.route('/api/backup', backupRoutes);
+app.route('/api/media', mediaRoutes);
+app.route('/api/i18n', i18nRoutes);
+app.route('/api/relationships', relationshipRoutes);
+app.route('/api/graphql', graphqlRoutes);
 
 // Plugin routes - registered dynamically
 function registerPluginRoutes() {
@@ -196,6 +207,15 @@ async function startServer() {
 
     // Initialize webhooks
     await webhookService.initialize();
+
+    // Initialize media service
+    await mediaService.initialize();
+
+    // Initialize i18n
+    await i18nService.initialize();
+
+    // Initialize relationships
+    await relationshipService.initialize();
 
     // Load plugins
     console.log('Loading plugins...');

@@ -1,3 +1,60 @@
 {
-  "plugins": []
+  "plugins": [
+    {
+      "name": "github-media",
+      "enabled": true,
+      "source": "local",
+      "path": "./plugins/github-media",
+      "settings": {
+        "token": "${GITHUB_MEDIA_TOKEN}",
+        "owner": "${GITHUB_MEDIA_OWNER}",
+        "repo": "${GITHUB_MEDIA_REPO:lokicms-media}",
+        "branch": "main",
+        "uploadPath": "uploads",
+        "autoCreateRepo": true,
+        "repoVisibility": "public",
+        "maxFileSize": 26214400,
+        "warnFileSize": 10485760,
+        "maxRepoSize": 524288000,
+        "allowedExtensions": [
+          "jpg", "jpeg", "png", "gif", "webp", "svg", "ico", "bmp",
+          "pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt", "csv",
+          "mp3", "wav", "ogg", "m4a",
+          "mp4", "webm", "mov",
+          "woff", "woff2", "ttf", "otf", "eot",
+          "json", "xml", "zip"
+        ],
+        "blockedExtensions": [
+          "exe", "bat", "sh", "cmd", "msi", "dll",
+          "php", "py", "rb", "pl",
+          "htaccess", "env", "sql"
+        ]
+      }
+    },
+    {
+      "name": "stripe",
+      "enabled": true,
+      "source": "local",
+      "path": "./plugins/stripe",
+      "settings": {
+        "secretKey": "${STRIPE_SECRET_KEY}",
+        "webhookSecret": "${STRIPE_WEBHOOK_SECRET}",
+        "successUrl": "http://localhost:3005/checkout/success",
+        "cancelUrl": "http://localhost:3005/checkout/cancel",
+        "portalReturnUrl": "http://localhost:3005/account",
+        "currency": "usd"
+      }
+    },
+    {
+      "name": "webhooks",
+      "enabled": true,
+      "source": "local",
+      "path": "./plugins/webhooks",
+      "settings": {
+        "maxRetries": 3,
+        "retryDelay": 5000,
+        "timeout": 30000
+      }
+    }
+  ]
 }

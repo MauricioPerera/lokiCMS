@@ -1,6 +1,7 @@
 node_modules/
 dist/
 *.log
+logs/
 .env
 .env.local
 data/*.db
@@ -9,3 +10,7 @@ data/*.db
 coverage/
 .claude/
 structure.json
+backup-*.tar.gz
+
+# Plugins are installed from npm or cloned separately
+plugins/

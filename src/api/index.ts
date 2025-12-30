@@ -27,7 +27,12 @@ import { entryRoutes } from './routes/entries.js';
 import { taxonomyRoutes } from './routes/taxonomies.js';
 import { termRoutes } from './routes/terms.js';
 import { userRoutes } from './routes/users.js';
+import { searchRoutes } from './routes/search.js';
+import { schedulerRoutes } from './routes/scheduler.js';
+import { auditRoutes } from './routes/audit.js';
 import { routeRegistry, pluginRegistry, loadAllPlugins } from '../plugins/index.js';
+import { schedulerService } from '../services/scheduler.service.js';
+import { auditService } from '../services/audit.service.js';
 
 // Environment detection
 const IS_PRODUCTION = process.env['NODE_ENV'] === 'production';
@@ -115,6 +120,9 @@ app.route('/api/entries', entryRoutes);
 app.route('/api/taxonomies', taxonomyRoutes);
 app.route('/api/terms', termRoutes);
 app.route('/api/users', userRoutes);
+app.route('/api/search', searchRoutes);
+app.route('/api/scheduler', schedulerRoutes);
+app.route('/api/audit', auditRoutes);
 
 // Plugin routes - registered dynamically
 function registerPluginRoutes() {
@@ -172,12 +180,19 @@ async function startServer() {
     });
     console.log('Database initialized');
 
+    // Initialize audit log
+    await auditService.initialize();
+
     // Load plugins
     console.log('Loading plugins...');
     await loadAllPlugins();
 
     // Register plugin routes
     registerPluginRoutes();
+
+    // Start scheduler for scheduled entries
+    schedulerService.start();
+    console.log('[Scheduler] Started');
 
     // Start HTTP server based on runtime
     if (IS_BUN) {
@@ -209,6 +224,7 @@ async function startServer() {
     // Graceful shutdown
     const shutdown = async () => {
       console.log('\nShutting down gracefully...');
+      schedulerService.stop();
       await saveDatabase();
       await closeDatabase();
       console.log('Database saved. Goodbye!');

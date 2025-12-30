@@ -16,6 +16,7 @@ import { contentTools } from './tools/content.js';
 import { taxonomyTools } from './tools/taxonomy.js';
 import { userTools } from './tools/users.js';
 import { structureTools } from './tools/structure.js';
+import { systemTools } from './tools/system.js';
 import { mcpToolRegistry } from '../plugins/index.js';
 
 // Core tools (static)
@@ -24,6 +25,7 @@ const coreTools = {
   ...taxonomyTools,
   ...userTools,
   ...structureTools,
+  ...systemTools,
 };
 
 // Get all tools including plugin tools (dynamic)

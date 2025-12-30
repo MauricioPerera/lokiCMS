@@ -8,11 +8,13 @@
 |--------|---------|
 | **Type** | Headless Content Management System |
 | **Database** | LokiJS (embedded document database) |
-| **API** | Hono framework (REST) |
+| **API** | Hono (REST) + GraphQL-like |
 | **AI Integration** | MCP (Model Context Protocol) |
 | **Language** | TypeScript (ES Modules) |
 | **Runtime** | Node.js or Bun (auto-detected) |
 | **Auth** | JWT tokens + API keys |
+| **i18n** | Multi-language support |
+| **Media** | Upload, thumbnails, optimization |
 
 ### Execution Modes
 
@@ -386,6 +388,41 @@ backupService.getStats()
 // Options: { includeUsers, mergeMode: 'replace'|'merge'|'skip' }
 ```
 
+### i18nService
+```typescript
+import { i18nService } from './services/i18n.service.js';
+
+i18nService.getLocales(activeOnly)             // Get all locales
+i18nService.createLocale({ code, name, ... })  // Create locale
+i18nService.setDefaultLocale(code)             // Set default
+i18nService.createTranslation(entryId, locale, data)  // Translate entry
+i18nService.getTranslations(entryId)           // Get all translations
+i18nService.linkTranslations(entries)          // Link entries as translations
+```
+
+### mediaService
+```typescript
+import { mediaService } from './services/media.service.js';
+
+mediaService.upload(file, options, userId)     // Upload file
+mediaService.getById(id)                       // Get media item
+mediaService.list({ folder, mimeType, limit }) // List media
+mediaService.delete(id)                        // Delete media
+mediaService.getStats()
+// Auto-generates thumbnails: small (150), medium (400), large (800)
+```
+
+### relationshipService
+```typescript
+import { relationshipService } from './services/relationship.service.js';
+
+relationshipService.createDefinition({ name, sourceContentType, targetContentType, cardinality })
+relationshipService.link(definitionSlug, sourceId, targetId)
+relationshipService.getRelated(entryId, definitionSlug)
+relationshipService.unlink(sourceId, targetId)
+// Cardinality: 'one-to-one' | 'one-to-many' | 'many-to-many'
+```
+
 ---
 
 ## API Routes
@@ -431,6 +468,10 @@ GET    /api/{resource}/slug/:slug   # Get by slug (where applicable)
 | `/api/revisions/:entryId` | Entry revision history |
 | `/api/webhooks` | Webhook CRUD and management |
 | `/api/backup` | Backup create, list, restore |
+| `/api/media` | Media upload, list, delete |
+| `/api/i18n` | Locales and translations |
+| `/api/relationships` | Content relationship management |
+| `/api/graphql` | GraphQL-like query API |
 | `/health` | GET - health check + memory stats |
 
 ### Authentication

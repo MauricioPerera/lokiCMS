@@ -11,14 +11,17 @@
 | **API** | Hono framework (REST) |
 | **AI Integration** | MCP (Model Context Protocol) |
 | **Language** | TypeScript (ES Modules) |
+| **Runtime** | Node.js or Bun (auto-detected) |
 | **Auth** | JWT tokens + API keys |
 
 ### Execution Modes
 
 ```bash
-npm run dev          # REST API server (port 3000)
+npm run dev          # REST API server (development)
 npm run dev:mcp      # MCP server (stdio transport)
 npm run seed         # Initialize database with sample data
+npm run prod         # Build + start production (Node.js)
+npm run prod:bun     # Build + start production (Bun)
 ```
 
 ---
@@ -33,6 +36,11 @@ npm install
 npm run dev              # Start API server
 npm run dev:mcp          # Start MCP server
 
+# Production
+npm run prod             # Build + start (Node.js)
+npm run prod:bun         # Build + start (Bun - faster)
+npm run start:bun        # Start with Bun runtime
+
 # Database
 npm run seed             # Seed with sample data
 npm run export:structure # Export structure to JSON
@@ -44,6 +52,19 @@ npm run test:watch       # Watch mode
 
 # Build
 npm run build            # Compile TypeScript to dist/
+```
+
+### CLI Management (Production)
+
+```bash
+./lokicms start      # Start with PM2
+./lokicms stop       # Stop server
+./lokicms restart    # Restart server
+./lokicms status     # Status + health check
+./lokicms logs [n]   # View last n log lines
+./lokicms monit      # PM2 monitoring dashboard
+./lokicms backup     # Backup data + config
+./lokicms update     # Git pull + build + restart
 ```
 
 ---
@@ -301,7 +322,14 @@ userService.verifyApiKey(key)        // Validate API key
 
 ## API Routes
 
-Base URL: `http://localhost:3000/api`
+Base URL: `http://localhost:3000/api` (dev) or `http://localhost:3005/api` (prod)
+
+### API Optimizations
+- **Compression**: gzip/deflate enabled
+- **ETag caching**: Automatic for GET requests
+- **Cache-Control**: 60s entries, 300s content-types
+- **Security headers**: Enabled via Hono
+- **Server-Timing**: Performance metrics in headers
 
 ### Pattern
 ```
@@ -326,6 +354,8 @@ GET    /api/{resource}/slug/:slug   # Get by slug (where applicable)
 | `/api/users` | User management |
 | `/api/auth/login` | POST - authenticate, get JWT |
 | `/api/auth/register` | POST - create user |
+| `/api/plugins` | GET - list loaded plugins |
+| `/health` | GET - health check + memory stats |
 
 ### Authentication
 
@@ -409,11 +439,21 @@ File: `plugins.json`
       "name": "local-plugin",
       "source": "local",
       "path": "./plugins/my-local-plugin",
-      "enabled": true
+      "enabled": true,
+      "settings": { ... }
     }
   ]
 }
 ```
+
+### Example Plugins (Preconfigured)
+| Plugin | Description |
+|--------|-------------|
+| `github-media` | Upload media files to GitHub repository |
+| `stripe` | Payment processing with Stripe |
+| `webhooks` | Webhook system for external integrations |
+
+Plugin routes are available at: `/api/plugins/{plugin-name}/`
 
 ### Plugin Structure
 ```typescript
@@ -663,11 +703,62 @@ await callTool('get_structure_summary', {});
 
 ---
 
+## Production Deployment
+
+### PM2 Configuration
+File: `ecosystem.config.cjs`
+
+```javascript
+module.exports = {
+  apps: [{
+    name: 'lokicms-api',
+    script: 'dist/api/index.js',
+    interpreter: 'bun',         // or 'node'
+    instances: 1,               // LokiJS is not cluster-safe
+    autorestart: true,
+    max_memory_restart: '200M',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 3005,
+    }
+  }]
+};
+```
+
+### Deployment Steps
+```bash
+# 1. Clone and install
+git clone https://github.com/user/lokicms.git
+cd lokicms && npm install
+
+# 2. Configure
+cp .env.example .env
+# Edit .env with production values
+
+# 3. Build and start
+npm run build
+pm2 start ecosystem.config.cjs
+
+# 4. Or use the CLI
+./lokicms start
+```
+
+### Backup & Restore
+```bash
+./lokicms backup    # Creates backup-YYYYMMDD-HHMMSS.tar.gz
+# Contains: data/, plugins.json, .env
+```
+
+---
+
 ## Environment Variables
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `PORT` | `3000` | API server port |
+| `PORT` | `3000` / `3005` | API server port (dev/prod) |
+| `HOST` | `localhost` | Server hostname |
 | `DB_PATH` | `./data/cms.db` | Database file path |
 | `JWT_SECRET` | (required) | Secret for JWT signing |
 | `NODE_ENV` | `development` | Environment mode |
+| `GITHUB_MEDIA_TOKEN` | - | GitHub token for media plugin |
+| `STRIPE_SECRET_KEY` | - | Stripe secret for payments plugin |

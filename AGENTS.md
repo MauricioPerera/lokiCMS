@@ -352,6 +352,40 @@ auditService.getRecentActivity(limit)
 auditService.getStats()
 ```
 
+### revisionService
+```typescript
+import { revisionService } from './services/revision.service.js';
+
+revisionService.getRevisions(entryId, limit)   // Get entry revisions
+revisionService.getRevision(revisionId)        // Get specific revision
+revisionService.compareRevisions(id1, id2)     // Diff two revisions
+revisionService.getStats()                     // Statistics
+// Auto-tracks via hooks: create, update, publish, unpublish
+```
+
+### webhookService
+```typescript
+import { webhookService } from './services/webhook.service.js';
+
+webhookService.create({ name, url, events, secret })
+webhookService.list()                          // List webhooks
+webhookService.trigger(event, payload)         // Trigger manually
+webhookService.test(webhookId)                 // Test webhook
+webhookService.getStats()
+// Events: entry:*, user:*, content-type:*
+```
+
+### backupService
+```typescript
+import { backupService } from './services/backup.service.js';
+
+backupService.createBackup({ description })    // Create backup
+backupService.listBackups()                    // List available
+backupService.restoreFromBackup(id, options)   // Restore
+backupService.getStats()
+// Options: { includeUsers, mergeMode: 'replace'|'merge'|'skip' }
+```
+
 ---
 
 ## API Routes
@@ -394,6 +428,9 @@ GET    /api/{resource}/slug/:slug   # Get by slug (where applicable)
 | `/api/search/:contentType?q=query` | Search within content type |
 | `/api/scheduler` | Scheduler status and management |
 | `/api/audit` | Audit log queries |
+| `/api/revisions/:entryId` | Entry revision history |
+| `/api/webhooks` | Webhook CRUD and management |
+| `/api/backup` | Backup create, list, restore |
 | `/health` | GET - health check + memory stats |
 
 ### Authentication
@@ -410,7 +447,7 @@ X-API-Key: <key>
 
 ## MCP Tools
 
-40 tools available for AI agents via MCP protocol.
+51 tools available for AI agents via MCP protocol.
 
 ### Content Management (10 tools)
 | Tool | Description |
@@ -479,6 +516,29 @@ X-API-Key: <key>
 | `audit_query` | Query audit logs with filters |
 | `audit_resource_history` | Get change history for a resource |
 | `audit_stats` | Get audit log statistics |
+
+### Revision Tools (3 tools)
+| Tool | Description |
+|------|-------------|
+| `revision_list` | Get revision history for an entry |
+| `revision_compare` | Compare two revisions (diff) |
+| `revision_stats` | Get revision statistics |
+
+### Webhook Tools (4 tools)
+| Tool | Description |
+|------|-------------|
+| `webhook_list` | List all configured webhooks |
+| `webhook_create` | Create a new webhook |
+| `webhook_test` | Test a webhook |
+| `webhook_stats` | Get webhook statistics |
+
+### Backup Tools (4 tools)
+| Tool | Description |
+|------|-------------|
+| `backup_create` | Create full CMS backup |
+| `backup_list` | List available backups |
+| `backup_restore` | Restore from backup |
+| `backup_stats` | Get backup statistics |
 
 ---
 

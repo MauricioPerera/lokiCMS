@@ -37,6 +37,7 @@ import { mediaRoutes } from './routes/media.js';
 import { i18nRoutes } from './routes/i18n.js';
 import { relationshipRoutes } from './routes/relationships.js';
 import { graphqlRoutes } from './routes/graphql.js';
+import { vectorSearchRoutes } from './routes/vector-search.js';
 import { routeRegistry, pluginRegistry, loadAllPlugins } from '../plugins/index.js';
 import { schedulerService } from '../services/scheduler.service.js';
 import { auditService } from '../services/audit.service.js';
@@ -45,6 +46,7 @@ import { webhookService } from '../services/webhook.service.js';
 import { mediaService } from '../services/media.service.js';
 import { i18nService } from '../services/i18n.service.js';
 import { relationshipService } from '../services/relationship.service.js';
+import { vectorSearchService } from '../services/vector-search.service.js';
 
 // Environment detection
 const IS_PRODUCTION = process.env['NODE_ENV'] === 'production';
@@ -142,6 +144,7 @@ app.route('/api/media', mediaRoutes);
 app.route('/api/i18n', i18nRoutes);
 app.route('/api/relationships', relationshipRoutes);
 app.route('/api/graphql', graphqlRoutes);
+app.route('/api/vector-search', vectorSearchRoutes);
 
 // Plugin routes - registered dynamically
 function registerPluginRoutes() {
@@ -216,6 +219,9 @@ async function startServer() {
 
     // Initialize relationships
     await relationshipService.initialize();
+
+    // Initialize vector search
+    await vectorSearchService.initialize();
 
     // Load plugins
     console.log('Loading plugins...');

@@ -16,3 +16,4 @@ export { BackupService, backupService } from './backup.service.js';
 export { MediaService, mediaService } from './media.service.js';
 export { I18nService, i18nService } from './i18n.service.js';
 export { RelationshipService, relationshipService } from './relationship.service.js';
+export { VectorSearchService, vectorSearchService } from './vector-search.service.js';

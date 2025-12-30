@@ -576,6 +576,132 @@ const stripePlugin: PluginDefinition = {
 export default stripePlugin;
 ```
 
+### Publicar un Plugin en npm
+
+#### 1. Estructura del Proyecto
+
+```
+lokicms-plugin-mi-plugin/
+├── src/
+│   └── index.ts          # Código fuente TypeScript
+├── dist/
+│   └── index.js          # Código compilado (generado)
+├── package.json
+├── tsconfig.json
+└── README.md
+```
+
+#### 2. Configurar package.json
+
+```json
+{
+  "name": "lokicms-plugin-mi-plugin",
+  "version": "1.0.0",
+  "description": "Mi plugin para LokiCMS",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "lokicms",
+    "lokicms-plugin",
+    "cms",
+    "plugin"
+  ],
+  "peerDependencies": {
+    "loki-cms": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "loki-cms": "^1.0.0"
+  },
+  "lokicms": {
+    "displayName": "Mi Plugin",
+    "minVersion": "1.0.0"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "license": "MIT"
+}
+```
+
+#### 3. Configurar tsconfig.json
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "declaration": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+#### 4. Compilar y Publicar
+
+```bash
+# Compilar TypeScript a JavaScript
+npm run build
+
+# Verificar que dist/ contiene los archivos
+ls dist/
+
+# Login en npm (si no lo has hecho)
+npm login
+
+# Publicar (ejecuta prepublishOnly automáticamente)
+npm publish
+
+# Para actualizaciones
+npm version patch  # o minor/major
+npm publish
+```
+
+#### 5. Convenciones de Nombres
+
+| Tipo | Formato | Ejemplo |
+|------|---------|---------|
+| Paquete npm | `lokicms-plugin-{nombre}` | `lokicms-plugin-stripe` |
+| Scoped | `@scope/lokicms-plugin-{nombre}` | `@miempresa/lokicms-plugin-analytics` |
+
+El loader detecta automáticamente paquetes que siguen esta convención en `node_modules`.
+
+#### 6. Usar el Plugin Publicado
+
+```bash
+# Instalar
+npm install lokicms-plugin-mi-plugin
+```
+
+```json
+// plugins.json
+{
+  "plugins": [
+    {
+      "name": "lokicms-plugin-mi-plugin",
+      "enabled": true,
+      "source": "npm",
+      "settings": {
+        "apiKey": "${MI_PLUGIN_API_KEY}"
+      }
+    }
+  ]
+}
+```
+
 ## Servidor MCP
 
 El servidor MCP permite gestionar el CMS mediante agentes AI como Claude.

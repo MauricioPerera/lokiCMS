@@ -82,7 +82,7 @@ src/
 │   └── middleware/       # Auth, validation
 ├── mcp/
 │   ├── index.ts          # MCP server
-│   └── tools/            # MCP tools (29 tools)
+│   └── tools/            # MCP tools (56 tools)
 ├── services/             # Business logic layer
 ├── models/               # Zod schemas
 ├── db/
@@ -488,45 +488,50 @@ X-API-Key: <key>
 
 ## MCP Tools
 
-51 tools available for AI agents via MCP protocol.
+56 tools available for AI agents via MCP protocol.
 
-### Content Management (10 tools)
+### Content Management (11 tools)
 | Tool | Description |
 |------|-------------|
-| `create_content_type` | Create a new content type |
-| `get_content_type` | Get content type by ID or slug |
 | `list_content_types` | List all content types |
-| `update_content_type` | Update content type |
+| `get_content_type` | Get content type by slug |
+| `create_content_type` | Create a new content type |
 | `delete_content_type` | Delete content type |
-| `create_entry` | Create a new entry |
-| `get_entry` | Get entry by ID |
 | `list_entries` | List entries with filters |
+| `get_entry` | Get entry by ID or slug |
+| `create_entry` | Create a new entry |
 | `update_entry` | Update entry |
 | `delete_entry` | Delete entry |
+| `publish_entry` | Publish an entry (set status to published) |
+| `unpublish_entry` | Unpublish an entry (set status to draft) |
 
-### Taxonomy Management (8 tools)
+### Taxonomy Management (11 tools)
 | Tool | Description |
 |------|-------------|
-| `create_taxonomy` | Create taxonomy |
-| `get_taxonomy` | Get taxonomy by ID or slug |
 | `list_taxonomies` | List all taxonomies |
+| `get_taxonomy` | Get taxonomy by slug |
+| `create_taxonomy` | Create taxonomy |
 | `delete_taxonomy` | Delete taxonomy |
-| `create_term` | Create term in taxonomy |
-| `get_term` | Get term by ID |
 | `list_terms` | List terms in taxonomy |
+| `get_term` | Get term by ID or slug |
+| `create_term` | Create term in taxonomy |
+| `update_term` | Update an existing term |
 | `delete_term` | Delete term |
+| `assign_terms` | Assign terms to an entry |
+| `get_entries_by_term` | Get all entries with a specific term |
 
-### User Management (8 tools)
+### User Management (9 tools)
 | Tool | Description |
 |------|-------------|
-| `create_user` | Create new user |
-| `get_user` | Get user by ID |
 | `list_users` | List all users |
-| `update_user` | Update user |
+| `get_user` | Get user by ID or email |
+| `create_user` | Create new user |
+| `update_user` | Update user account |
+| `update_user_role` | Change a user's role |
 | `delete_user` | Delete user |
-| `authenticate_user` | Login with credentials |
-| `generate_api_key` | Generate API key for user |
-| `change_password` | Change user password |
+| `create_api_key` | Create API key for user |
+| `list_api_keys` | List API keys for user |
+| `revoke_api_key` | Revoke an API key |
 
 ### Structure Migration (3 tools)
 | Tool | Description |
